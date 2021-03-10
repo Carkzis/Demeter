@@ -1,0 +1,4 @@
+demeter/settings.py
+demeter_env/
+__pycache__/
+*.sqlite3
