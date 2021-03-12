@@ -1,0 +1,12 @@
+{% extends "demeter_app/base.html" %}
+
+{% block content %}
+
+<p>What is your meal?</p>
+<form action="{% url 'demeter_app:add_meal' %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit">Add meal</button>
+</form>
+
+{% endblock content %}

@@ -1,3 +1,4 @@
+country,continent,national_dish
 Afghanistan,Asia,Kabuli palaw
 Albania,Europe,Tave kosi
 Algeria,Africa,Couscous
@@ -38,7 +39,7 @@ China,Asia,Peking duck
 Colombia,South America,Ajiaco
 Comoros,Africa,Langouste a la vanille
 Congo,Africa,Poulet a la moambe
-"Congo, Democratic Republic of",Africa,Poulet moambe
+Democratic Republic of Congo,Africa,Poulet moambe
 Costa Rica,North America,Gallo pinto
 Croatia,Europe,Zagorski strukli
 Cuba,North America,Ropa vieja
@@ -88,8 +89,8 @@ Jordan,Asia,Mansaf
 Kazakhstan,Asia,Beshbarmak
 Kenya,Africa,Ugali
 Kiribati,Oceania,Palusami
-"Korea, North",Asia,Raengmyeon
-"Korea, South",Asia,Kimchi
+North Korea,Asia,Raengmyeon
+South Korea,Asia,Kimchi
 Kuwait,Asia,Machboos
 Kyrgyzstan,Asia,Beshbarmak
 Laos,Asia,Laap
