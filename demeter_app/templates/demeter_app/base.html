@@ -1,5 +1,14 @@
 <p>
     <a href="{% url 'demeter_app:index' %}">Demeter</a>
+    {% if user.is_authenticated %}
+        <p>Got any new meals to add, {{ user.username }}?
+            <a href="{% url 'demeter_app:add_meal' %}">Add a meal!</a>
+            <a href="{% url 'users:logout' %}">Log out!</a>
+        </p>
+    {% else %}
+        <a href="{% url 'users:login' %}">Log in!</a>
+        <a href="{% url 'users:register' %}">Register!</a>
+    {% endif %}
 </p>
 
 {% block content %}{% endblock content %}

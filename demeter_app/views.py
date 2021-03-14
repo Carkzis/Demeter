@@ -11,11 +11,6 @@ def import_page(request):
     """Import page."""
     return render(request, 'demeter_app/import.html')
 
-class AddMeal(CreateView):
-    model = Meal
-    form_class = MealForm
-    template_name = 'demeter_app/add_meal.html'
-
 def add_meal(request):
     """Add meal."""
     if request.method != 'POST':
@@ -28,4 +23,3 @@ def add_meal(request):
 
     context = {'form': form}
     return render(request, 'demeter_app/add_meal.html', context)
-

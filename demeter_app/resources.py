@@ -5,8 +5,7 @@ class NationResource(resources.ModelResource):
 
     class Meta:
         model = Nation
-        skip_unchanged = False
+        skip_unchanged = True
         report_skipped = True
-        exclude = ('id',)
         import_id_fields = ('country', 'continent', 'national_dish',)
-        fields = ('id', 'country', 'continent', 'national_dish',)
+        fields = ('country', 'continent', 'national_dish',)
