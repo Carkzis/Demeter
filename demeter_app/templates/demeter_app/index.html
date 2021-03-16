@@ -2,6 +2,16 @@
 
 {% block content %}
 
-<p>Keep track of your journey to cook a meal from every country in the world!</p>
+<p>Keep track of your journey to cook a meal from every country in the world!
+Africa has {{ continents.Africa }} countries! But time for a list!
+</p>
+
+<ul>
+    {% for k, v in continents.items %}
+        <li>{{ k }} has {{ v }} countries!</li>
+    {% endfor %}
+</ul>
+
+<p>Can you cook a meal for each country?</p>
 
 {% endblock content %}

@@ -1,8 +1,9 @@
 <p>
-    <a href="{% url 'demeter_app:index' %}">Demeter</a>
+    <h1><a href="{% url 'demeter_app:index' %}">Demeter</a></h1>
     {% if user.is_authenticated %}
         <p>Got any new meals to add, {{ user.username }}?
-            <a href="{% url 'demeter_app:add_meal' %}">Add a meal!</a>
+            <a href="{% url 'demeter_app:your_meals' %}">Your Meals!</a>
+            <a href="{% url 'users:password_change' %}">Change password?</a>
             <a href="{% url 'users:logout' %}">Log out!</a>
         </p>
     {% else %}

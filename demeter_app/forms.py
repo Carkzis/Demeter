@@ -5,4 +5,4 @@ from .models import Meal, Nation
 class MealForm(forms.ModelForm):
     class Meta:
         model = Meal
-        fields = ['member', 'meal', 'country']
+        fields = ['meal', 'country']

@@ -1,0 +1,18 @@
+{% extends 'demeter_app/base.html' %}
+
+{% block content %}
+
+<p>Here is your current list of your meals!</p>
+
+<ul>
+    {% for meal in meals %}
+        <li>
+            <a href="{% url 'demeter_app:view_meal' meal.id %}">{{ meal.meal }}</a>
+            from {{ meal.country }}, {{ meal.country.continent }}
+        </li>  
+    {% endfor %}
+</ul>
+
+<a href="{% url 'demeter_app:add_meal' %}">Add a Meal!</a>
+
+{% endblock content %}
