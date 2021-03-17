@@ -15,4 +15,22 @@
 
 <a href="{% url 'demeter_app:add_meal' %}">Add a Meal!</a>
 
+<p>Countries completed by continent:</p>
+
+{% regroup countries by continent as continent_list %}
+
+<ul>
+    {% for continent in continent_list %}
+        <li>{{ continent.grouper }}</li>
+            <ul>
+            {% for country in continent.list %}
+                <li>{{ country.country}}</li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+{{ count }}
+
 {% endblock content %}
