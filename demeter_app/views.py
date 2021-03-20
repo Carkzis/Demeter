@@ -30,25 +30,77 @@ def add_meal(request):
 def your_meals(request):
     """Displays all meals associated with a user."""
     meals = Meal.objects.all()
-    # Get the amount of different countries meals have been made for
-    unique_countries = Meal.objects.order_by().values_list('country', flat=True).distinct()
-    # Create k-v pairs of county and continent
-    country_continents = Nation.objects.filter(country__in=unique_countries).values('country', 'continent')
-    country_counter = {}
-    # For loop to count countries completed
-    # TODO: REFACTOR THIS!
-    for country_continent in country_continents:
-        key_entry = country_continent['continent']
-        if key_entry not in country_counter:
-            country_counter[key_entry] = 1
-        else:
-           country_counter[key_entry] += 1
+    country_continents, country_counter = completion_counter()
     context = {
         'meals': meals,
         'countries': country_continents,
         'count': country_counter
         }
     return render(request, 'demeter_app/your_meals.html', context)
+
+def stats(request):
+    """Displays the stats regarding the completion of countries by continent."""
+    country_continents, country_counter = completion_counter()
+    country_totals = display_country_totals()
+    completion_percentages = completion_percent(country_counter, country_totals)
+    next_continent = random_choice(completion_percentages, country_continents)
+    context = {
+        'countries': country_continents,
+        'count': country_counter,
+        'totals': country_totals,
+        'percentages': completion_percentages,
+        'next': next_continent,
+        }
+    return render(request, 'demeter_app/stats.html', context)
+
+def random_choice(completion_percentages, country_continents):
+    """
+    Suggests an new country to complete based on which continent
+    you have done less of.
+    """
+    next_continent = min(
+        completion_percentages,
+        key=completion_percentages.get
+        )
+    
+    # Gets a query set of all countries in next continent
+    return next_continent
+
+
+def completion_counter():
+    """Returns the countries where meals have been made."""
+        # Get the amount of different countries meals have been made for
+    unique_countries = Meal.objects.order_by().values_list('country', flat=True).distinct()
+    # Create k-v pairs of county and continent
+    country_continents = Nation.objects.filter(country__in=unique_countries).values('country', 'continent')
+    country_counter = {}
+    # For loop to count countries completed
+    for country_continent in country_continents:
+        key_entry = country_continent['continent']
+        if key_entry not in country_counter:
+            country_counter[key_entry] = 1
+        else:
+           country_counter[key_entry] += 1
+    return country_continents, country_counter
+
+def completion_percent(country_counter, country_totals):
+    """Calculates percentage of continents completed, plus overall."""
+    completion_percentages = {}
+    overall_total = 0 # overall total of countries completed
+    total_countries = 0 # Incase the amount of countries change!
+    for k, v in country_totals.items():
+        if k not in country_counter:
+            country_counter[k] = 0
+        completion_percentages[k] = str(round(
+            (country_counter[k] / country_totals[k] * 100), 2
+            )) + "%"
+        overall_total += country_counter[k]
+        total_countries += country_totals[k]
+    # Add an overall percentage to the dictionary
+    completion_percentages['Total'] = str(round(
+            (overall_total / total_countries * 100), 2
+            )) + "%"
+    return completion_percentages
 
 @login_required
 def view_meal(request, meal_id):

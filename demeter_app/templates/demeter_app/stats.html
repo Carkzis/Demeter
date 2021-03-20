@@ -1,0 +1,25 @@
+{% extends 'demeter_app/base.html' %}
+
+{% block content %}
+
+<p>Countries completed by continent:</p>
+
+{% regroup countries|dictsort:"continent" by continent as continent_list %}
+
+<ul>
+    {% for continent in continent_list %}
+        <li>{{ continent.grouper }} - {{ percentages|get_item:continent.grouper }} completed!</li>
+            <ul>
+            {% for country in continent.list %}
+                <li>{{ country.country }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+<p>You have completed {{ percentages|get_item:'Total' }} of the total countries in the world!</p>
+
+{{ next }}
+
+{% endblock content %}
