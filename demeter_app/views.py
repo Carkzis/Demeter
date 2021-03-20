@@ -6,6 +6,8 @@ from .forms import MealForm
 from .models import Nation, Meal
 from django.contrib.auth.decorators import login_required
 
+import random
+
 def index(request):
     """The home page."""
     return render(request, 'demeter_app/index.html', {'continents': display_country_totals()})
@@ -62,10 +64,16 @@ def random_choice(completion_percentages, country_continents):
         completion_percentages,
         key=completion_percentages.get
         )
-    
-    # Gets a query set of all countries in next continent
-    return next_continent
 
+    # Gets a query set of all countries in next continent
+    next_continent_options = Nation.objects.filter(continent=next_continent).values_list('country', flat=True)
+    meals_list = Meal.objects.all().values_list('country', flat=True)
+    # Need to exclude any country already done from the selection
+    next_continent_options = next_continent_options.exclude(country__in=meals_list)
+
+    next_country = random.choice(next_continent_options)
+    
+    return next_country
 
 def completion_counter():
     """Returns the countries where meals have been made."""
