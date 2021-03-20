@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from django.db.models import Count
+from django.http import Http404
 
 from .forms import MealForm
 from .models import Nation, Meal
@@ -10,7 +11,9 @@ import random
 
 def index(request):
     """The home page."""
-    return render(request, 'demeter_app/index.html', {'continents': display_country_totals()})
+    return render(request, 'demeter_app/index.html', {
+        'continents': display_country_totals()
+        })
 
 @login_required
 def add_meal(request):
@@ -31,8 +34,10 @@ def add_meal(request):
 @login_required
 def your_meals(request):
     """Displays all meals associated with a user."""
-    meals = Meal.objects.all()
-    country_continents, country_counter = completion_counter()
+    meals = Meal.objects.filter(member=request.user)
+    if not meals:
+        meals = False
+    country_continents, country_counter = completion_counter(request)
     context = {
         'meals': meals,
         'countries': country_continents,
@@ -40,12 +45,17 @@ def your_meals(request):
         }
     return render(request, 'demeter_app/your_meals.html', context)
 
+@login_required
 def stats(request):
     """Displays the stats regarding the completion of countries by continent."""
-    country_continents, country_counter = completion_counter()
+    country_continents, country_counter = completion_counter(request)
     country_totals = display_country_totals()
     completion_percentages = completion_percent(country_counter, country_totals)
-    next_continent = random_choice(completion_percentages, country_continents)
+    next_continent = random_choice(
+        request,
+        completion_percentages,
+        country_continents
+        )
     context = {
         'countries': country_continents,
         'count': country_counter,
@@ -55,7 +65,7 @@ def stats(request):
         }
     return render(request, 'demeter_app/stats.html', context)
 
-def random_choice(completion_percentages, country_continents):
+def random_choice(request, completion_percentages, country_continents):
     """
     Suggests an new country to complete based on which continent
     you have done less of.
@@ -66,8 +76,12 @@ def random_choice(completion_percentages, country_continents):
         )
 
     # Gets a query set of all countries in next continent
-    next_continent_options = Nation.objects.filter(continent=next_continent).values_list('country', flat=True)
-    meals_list = Meal.objects.all().values_list('country', flat=True)
+    next_continent_options = Nation.objects.filter(
+        continent=next_continent
+        ).values_list('country', flat=True)
+    meals_list = Meal.objects.filter(
+        member=request.user
+        ).values_list('country', flat=True)
     # Need to exclude any country already done from the selection
     next_continent_options = next_continent_options.exclude(country__in=meals_list)
 
@@ -75,12 +89,18 @@ def random_choice(completion_percentages, country_continents):
     
     return next_country
 
-def completion_counter():
+def completion_counter(request):
     """Returns the countries where meals have been made."""
         # Get the amount of different countries meals have been made for
-    unique_countries = Meal.objects.order_by().values_list('country', flat=True).distinct()
+    unique_countries = Meal.objects.order_by().values_list(
+        'country',
+        flat=True
+        ).distinct()
+    unique_countries = unique_countries.filter(member=request.user)
     # Create k-v pairs of county and continent
-    country_continents = Nation.objects.filter(country__in=unique_countries).values('country', 'continent')
+    country_continents = Nation.objects.filter(
+        country__in=unique_countries
+        ).values('country', 'continent')
     country_counter = {}
     # For loop to count countries completed
     for country_continent in country_continents:
@@ -114,6 +134,9 @@ def completion_percent(country_counter, country_totals):
 def view_meal(request, meal_id):
     """Displays a single meal."""
     meal = Meal.objects.get(id=meal_id)
+    # Redirect the member if they try to go to someone else's meal
+    if meal.member != request.user:
+        return redirect('demeter_app:your_meals')
     context = {'meal': meal}
     return render(request, 'demeter_app/view_meal.html', context)
 
