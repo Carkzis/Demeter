@@ -1,15 +1,65 @@
-<p>
-    <h1><a href="{% url 'demeter_app:index' %}">Demeter</a></h1>
-    {% if user.is_authenticated %}
-        <p>Got any new meals to add, {{ user.username }}?
-            <a href="{% url 'demeter_app:your_meals' %}">Your Meals!</a>
-            <a href="{% url 'users:password_change' %}">Change password?</a>
-            <a href="{% url 'users:logout' %}">Log out!</a>
-        </p>
-    {% else %}
-        <a href="{% url 'users:login' %}">Log in!</a>
-        <a href="{% url 'users:register' %}">Register!</a>
-    {% endif %}
-</p>
+{% load bootstrap4 %}
 
-{% block content %}{% endblock content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Demeter</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery="full" %}
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-8 border">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'demeter_app:index' %}">Demeter</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+        data-target="#navbarCollapse" aria-controls="navbarCollapse"
+        aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <span class ="navbar-text">What will you cook today, {{ user.username }}?</span></li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link"
+            href="{% url 'demeter_app:add_meal' %}">Add a Meal!</a></li>
+        <li class="nav-item">
+          <a class="nav-link"
+            href="{% url 'demeter_app:your_meals' %}">Your Meals!</a></li>
+        <li class="nav-item">
+          <a class="nav-link" 
+            href="{% url 'users:password_change' %}">Change password?</a></li>
+        <li class="nav-item">
+          <a class="nav-link" 
+            href="{% url 'users:logout' %}">Log out!</a></li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" 
+            href="{% url 'users:login' %}">Log in!</a></li>
+        <li class="nav-item">
+          <a class="nav-link" 
+            <a href="{% url 'users:register' %}">Register!</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main role="main" class="container-fluid">
+  <div class="pb-4 mb-4 border-bottom">
+    {% block page_header %}{% endblock page_header %}
+  </div>
+  <div>
+    {% block content %}{% endblock content %}
+  </div>
+</main>
+
+</body>
+</html>

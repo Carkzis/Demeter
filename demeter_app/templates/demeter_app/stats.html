@@ -18,10 +18,10 @@
     {% endfor %}
 </ul>
 
-{% if percentages|get_item:'Total' > "100" %}
+{% if overall_percent == "100.0%" %}
     <p>You have made a meal from every country and completed the challenge! Congrats!</p>
 {% else %}
-    <p>You have completed {{ percentages|get_item:'Total' }} of the total countries in the world!</p>
+    <p>You have completed {{ overall_percent }} of the total countries in the world!</p>
 
     <p>Why don't you try <b>{{ next }}</b> next? Try it now. Now.</p>
 {% endif %}

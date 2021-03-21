@@ -50,7 +50,7 @@ def stats(request):
     """Displays the stats regarding the completion of countries by continent."""
     country_continents, country_counter = completion_counter(request)
     country_totals = display_country_totals()
-    completion_percentages = completion_percent(country_counter, country_totals)
+    completion_percentages, overall_percent = completion_percent(country_counter, country_totals)
     next_continent = random_choice(
         request,
         completion_percentages,
@@ -61,6 +61,7 @@ def stats(request):
         'count': country_counter,
         'totals': country_totals,
         'percentages': completion_percentages,
+        'overall_percent': overall_percent,
         'next': next_continent,
         }
     return render(request, 'demeter_app/stats.html', context)
@@ -125,10 +126,10 @@ def completion_percent(country_counter, country_totals):
         overall_total += country_counter[k]
         total_countries += country_totals[k]
     # Add an overall percentage to the dictionary
-    completion_percentages['Total'] = str(round(
-            (overall_total / total_countries * 100), 2
-            )) + "%"
-    return completion_percentages
+    overall_percent = str(round(
+           (overall_total / total_countries * 100), 2
+           )) + "%"
+    return completion_percentages, overall_percent
 
 @login_required
 def view_meal(request, meal_id):
