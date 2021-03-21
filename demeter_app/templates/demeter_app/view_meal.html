@@ -1,8 +1,11 @@
 {% extends 'demeter_app/base.html' %}
 
+{% block page_header %}
+<h1>{{ meal.meal }}</h1>
+{% endblock page_header %}
+
 {% block content %}
 
-<h3>{{ meal.meal }}</h3>
 <p>A meal from {{meal.country}}, {{meal.country.continent}}.</br>
 You made this on {{meal.date_added}}</p>
 

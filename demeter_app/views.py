@@ -11,9 +11,12 @@ import random
 
 def index(request):
     """The home page."""
-    return render(request, 'demeter_app/index.html', {
-        'continents': display_country_totals()
-        })
+    continent_counts, total_countries = display_country_totals()
+    context = {
+        'countries_per': continent_counts,
+        'total_countries': total_countries,
+    }
+    return render(request, 'demeter_app/index.html', context)
 
 @login_required
 def add_meal(request):
@@ -34,7 +37,7 @@ def add_meal(request):
 @login_required
 def your_meals(request):
     """Displays all meals associated with a user."""
-    meals = Meal.objects.filter(member=request.user)
+    meals = Meal.objects.filter(member=request.user).order_by('country')
     if not meals:
         meals = False
     country_continents, country_counter = completion_counter(request)
@@ -49,7 +52,7 @@ def your_meals(request):
 def stats(request):
     """Displays the stats regarding the completion of countries by continent."""
     country_continents, country_counter = completion_counter(request)
-    country_totals = display_country_totals()
+    country_totals, overall_total = display_country_totals()
     completion_percentages, overall_percent = completion_percent(country_counter, country_totals)
     next_continent = random_choice(
         request,
@@ -148,5 +151,7 @@ def display_country_totals():
     )
     # Create a k-v pair for continent and counts
     continent_counts = {d['continent']: d['continent__count'] for d in continents}
-
-    return continent_counts
+    total_countries = 0
+    for k, v in continent_counts.items():
+        total_countries += v
+    return continent_counts, total_countries

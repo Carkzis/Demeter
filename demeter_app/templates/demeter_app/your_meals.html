@@ -1,4 +1,9 @@
 {% extends 'demeter_app/base.html' %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+<h1>Your Meals</h1>
+{% endblock page_header %}
 
 {% block content %}
 
@@ -16,9 +21,10 @@
             </li>  
         {% endfor %}
     </ul>
-
-    <a href="{% url 'demeter_app:add_meal' %}">Add a Meal!</a>
-    <a href="{% url 'demeter_app:stats' %}">Meal Statistics!</a>
+    {% buttons %}
+    <button class="btn btn-secondary" href="{% url 'demeter_app:add_meal' %}">Add a Meal!</button>
+    <button class="btn btn-secondary" href="{% url 'demeter_app:stats' %}">Meal Statistics!</button>
+    {% endbuttons %}
 {% endif %}
 
 {% endblock content %}

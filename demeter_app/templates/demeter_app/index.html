@@ -1,13 +1,17 @@
 {% extends 'demeter_app/base.html' %}
 
+{% block page_header %}
+<h1>Up for the Demeter challenge?</h1>
+{% endblock page_header %}
+
 {% block content %}
 
-<p>Keep track of your journey to cook a meal from every country in the world!
-Africa has {{ continents.Africa }} countries! But time for a list!
+<p>Keep track of your journey to cook a meal from every country in the world!</br>
+There are {{ total_countries }} countries (albeit debateable)! Breakdown as follows:</br>
 </p>
 
 <ul>
-    {% for k, v in continents.items %}
+    {% for k, v in countries_per.items %}
         <li>{{ k }} has {{ v }} countries!</li>
     {% endfor %}
 </ul>
