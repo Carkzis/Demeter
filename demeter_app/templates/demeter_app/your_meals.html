@@ -22,8 +22,8 @@
         {% endfor %}
     </ul>
     {% buttons %}
-    <button class="btn btn-secondary" href="{% url 'demeter_app:add_meal' %}">Add a Meal!</button>
-    <button class="btn btn-secondary" href="{% url 'demeter_app:stats' %}">Meal Statistics!</button>
+    <button class="btn btn-secondary" onclick="location.href={% url 'demeter_app:add_meal' %}">Add a Meal!</button>
+    <button class="btn btn-secondary" onclick="location.href={% url 'demeter_app:stats' %}">Meal Statistics!</button>
     {% endbuttons %}
 {% endif %}
 

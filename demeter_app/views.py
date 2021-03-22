@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView
 from django.db.models import Count
 from django.http import Http404
@@ -137,7 +137,7 @@ def completion_percent(country_counter, country_totals):
 @login_required
 def view_meal(request, meal_id):
     """Displays a single meal."""
-    meal = Meal.objects.get(id=meal_id)
+    meal = get_object_or_404(Meal, id=meal_id)
     # Redirect the member if they try to go to someone else's meal
     if meal.member != request.user:
         return redirect('demeter_app:your_meals')
