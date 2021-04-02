@@ -13,14 +13,14 @@ def index(request):
     """The home page."""
     continent_counts, total_countries = display_country_totals()
     context = {
-        'countries_per': continent_counts,
-        'total_countries': total_countries,
+        'countries_per': continent_counts, # amount of countries per continent
+        'total_countries': total_countries, # total amount of countries in world
     }
     return render(request, 'demeter_app/index.html', context)
 
 @login_required
 def add_meal(request):
-    """Add meal."""
+    """Add a meal."""
     if request.method != 'POST':
         form = MealForm()
     else:
@@ -40,11 +40,10 @@ def your_meals(request):
     meals = Meal.objects.filter(member=request.user).order_by('country')
     if not meals:
         meals = False
-    country_continents, country_counter = completion_counter(request)
+    country_continents = completion_counter(request)
     context = {
-        'meals': meals,
-        'countries': country_continents,
-        'count': country_counter
+        'meals': meals, # meals member has made
+        'countries': country_continents, # unique countries completed and their continents
         }
     return render(request, 'demeter_app/your_meals.html', context)
 
@@ -53,19 +52,22 @@ def stats(request):
     """Displays the stats regarding the completion of countries by continent."""
     country_continents, country_counter = completion_counter(request)
     country_totals, overall_total = display_country_totals()
-    completion_percentages, overall_percent = completion_percent(country_counter, country_totals)
-    next_continent = random_choice(
+    completion_percentages, overall_percent = completion_percent(
+        country_counter,
+        country_totals
+        )
+    next_meal = random_choice(
         request,
         completion_percentages,
         country_continents
         )
     context = {
-        'countries': country_continents,
-        'count': country_counter,
-        'totals': country_totals,
-        'percentages': completion_percentages,
-        'overall_percent': overall_percent,
-        'next': next_continent,
+        'countries': country_continents, # unique countries completed and their continents
+        'count': country_counter, # amount of countries completed
+        'totals': country_totals, # total countries in each continent
+        'percentages': completion_percentages, # percent of continent completed
+        'overall_percent': overall_percent, # percent of world completed
+        'next_meal': next_meal # next meal suggestion
         }
     return render(request, 'demeter_app/stats.html', context)
 
@@ -89,9 +91,12 @@ def random_choice(request, completion_percentages, country_continents):
     # Need to exclude any country already done from the selection
     next_continent_options = next_continent_options.exclude(country__in=meals_list)
 
+    # choose a random country from the next continent
     next_country = random.choice(next_continent_options)
+    # search the Nations table so we have access to the national dish
+    next_meal = Nation.objects.get(country=next_country)
     
-    return next_country
+    return next_meal
 
 def completion_counter(request):
     """Returns the countries where meals have been made."""
@@ -145,7 +150,7 @@ def view_meal(request, meal_id):
     return render(request, 'demeter_app/view_meal.html', context)
 
 def display_country_totals():
-    """Display the totals of countries."""
+    """Display the totals of countries both by continent and world."""
     continents = Nation.objects.values('continent').annotate(
         Count('continent')
     )

@@ -27,7 +27,7 @@
 {% else %}
     <p>You have completed {{ overall_percent }} of the total countries in the world!</p>
 
-    <p>Why don't you try <b>{{ next }}</b> next? Try it now. Now.</p>
+    <p>Why don't you try <b>{{ next_meal.national_dish }}</b> from <b>{{ next_meal.country }}</b> next? Try it now. Now.</p>
 {% endif %}
 
 {% endblock content %}
