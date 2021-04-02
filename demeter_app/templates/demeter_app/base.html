@@ -8,12 +8,18 @@
     <title>Demeter</title>
     {% bootstrap_css %}
     {% bootstrap_javascript jquery="full" %}
+    <style>
+      .title {
+        font-family: "Lucida Console",
+        "Courier New", monospace;
+      }
+    </style>
 </head>
 
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-8 border">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'demeter_app:index' %}">Demeter</a>
+    <a class="navbar-brand" style=margin-top:-4px href="{% url 'demeter_app:index' %}">Demeter</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbarCollapse" aria-controls="navbarCollapse"
         aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +61,7 @@
 </nav>
 
 <main role="main" class="container-fluid">
-  <div class="pb-4 mb-2 border-bottom">
+  <div class="pb-2 mb-2 border-bottom">
   </br>
     {% block page_header %}{% endblock page_header %}
   </div>
