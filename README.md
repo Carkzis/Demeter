@@ -32,7 +32,7 @@ This is a web app for you to keep track of quest to cook a meal from every count
 Marc Jowett (carkzis.apps@gmail.com)
 
 ## Version History
-* 0.1
+* 1.0
   * Initial Release.  See [commits](https://github.com/Carkzis/Demeter/commits/main).
 
 ## License
